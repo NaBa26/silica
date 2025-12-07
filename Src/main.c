@@ -20,6 +20,7 @@
 
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+	for(;;){
+        // Just dummy comment to initialize the gpio branch
+    }
 }
