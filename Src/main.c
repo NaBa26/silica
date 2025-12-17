@@ -18,12 +18,20 @@
 
 #include <stdint.h>
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
-
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+    // Base addresses for registers
+    uint32_t *pGPIOAMode = (uint32_t*) 0x40020000;   // GPIOA MODER register
+    uint32_t *pRCCAHB1 = (uint32_t*) 0x40023830;     // RCC AHB1ENR register
+    uint32_t *pGPIOAState = (uint32_t*) 0x40020014;  // GPIOA ODR register
+
+    // Enable GPIOA peripheral clock (bit 0 of RCC_AHB1ENR)
+    *pRCCAHB1 |= 0x01;
+
+    // Configure PA5 as output (MODER5[1:0] = 01)
+    *pGPIOAMode &= 0xFFFFF3FF;  // Clear bits [11:10] for pin 5
+    *pGPIOAMode |= 0x01 << 10;  // Set bit 10, leave bit 11 clear (01 = output mode)
+
+    // Set PA5 high (turn LED on)
+    *pGPIOAState |= 0x01 << 5;  // Set bit 5 in ODR register
 }
