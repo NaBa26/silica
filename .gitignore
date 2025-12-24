@@ -1,0 +1,36 @@
+# STM32CubeIDE
+.cproject
+.project
+.settings/
+Debug/
+Release/
+*.o
+*.a
+*.elf
+*.hex
+*.bin
+*.map
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build
+build/
+dist/
+*.out
+
+# Dependencies
+*.d
+
+# OS
+Thumbs.db
+
+# Extra files
+.cproject
+.project
+silica.launch 
