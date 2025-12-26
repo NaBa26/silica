@@ -17,9 +17,27 @@
  */
 
 #include <stdint.h>
+
+#include "gpio_driver.h"
 #include "stm32f401xe.h"
+
+void delay(volatile uint32_t count) {
+    while(count--);
+}
+
+//example code to test my custom made API for GPIO
+void blinky(void){
+	GPIO_ClockEnable(GPIOA);
+	GPIO_PinMode(GPIOA, 5, GPIO_MODE_OUTPUT);
+
+	while(1){
+		GPIO_TogglePin(GPIOA, 5);
+		delay(500000);
+	}
+}
+
 
 int main(void)
 {
-	GPIOA->MODER = 0;
+	blinky();
 }

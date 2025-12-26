@@ -1,6 +1,5 @@
 #include "gpio_driver.h"
 
-
 void GPIO_PinMode(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t mode){
     if(pin > 15 || mode > 3) {
         return;
@@ -68,11 +67,9 @@ uint8_t GPIO_ReadPin(GPIO_TypeDef *pGPIOx, uint8_t pin){
 }
 
 void GPIO_TogglePin(GPIO_TypeDef *pGPIOx, uint8_t pin){
-	if(pin > 15) {
-			return;
-	}
+    if(pin > 15) {
+        return;
+    }
 
-	uint8_t bit_pos = pin;
-
-	pGPIOx->BSRR = (pGPIOx->BSRR ^ (0x1 << bit_pos));
+    pGPIOx->ODR ^= (1 << pin);
 }
