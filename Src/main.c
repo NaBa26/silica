@@ -19,13 +19,13 @@
 #include <stdint.h>
 
 #include "gpio_driver.h"
+#include "uart_driver.h"
 #include "stm32f401xe.h"
 
 void delay(volatile uint32_t count) {
     while(count--);
 }
 
-//example code to test my custom made API for GPIO
 void blinky(void){
 	GPIO_ClockEnable(GPIOA);
 	GPIO_PinMode(GPIOA, 5, GPIO_MODE_OUTPUT);
@@ -36,8 +36,45 @@ void blinky(void){
 	}
 }
 
+void uart_sender(void){
+	UART_ClockEnable(USART2);
+	UART_GPIO_Init();
+	UART_Init(USART2, 115200, 42000000);
+
+	UART_SendString(USART2, "\r\n=== UART Test Menu ===\r\n");
+	UART_SendString(USART2, "1. Blink LED\r\n");
+	UART_SendString(USART2, "2. Send message\r\n");
+	UART_SendString(USART2, "3. Echo mode\r\n");
+	UART_SendString(USART2, "Select: ");
+
+    while(1) {
+        uint8_t choice = UART_ReceiveChar(USART2);
+        UART_SendChar(USART2, choice);
+        UART_SendString(USART2, "\r\n");
+
+        switch(choice) {
+            case '1':
+                UART_SendString(USART2, "LED toggling...\r\n");
+                GPIO_TogglePin(GPIOA, 5);
+                break;
+            case '2':
+                UART_SendString(USART2, "Hello from STM32!\r\n");
+                break;
+            case '3':
+                UART_SendString(USART2, "Echo mode - press ESC to exit\r\n");
+                while(1) {
+                    uint8_t c = UART_ReceiveChar(USART2);
+                    if(c == 27) break;  // ESC key
+                    UART_SendChar(USART2, c);
+                }
+                break;
+        }
+        UART_SendString(USART2, "\r\nSelect: ");
+    }
+}
 
 int main(void)
 {
-	blinky();
+//	blinky();
+	uart_sender();
 }

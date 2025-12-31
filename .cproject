@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Users\HP\STM32Cube\Repository\STM32Cube_FW_F4_V1.28.3\Drivers\CMSIS\Include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\HP\STM32Cube\Repository\STM32Cube_FW_F4_V1.28.3\Drivers\CMSIS\Device\ST\STM32F4xx\Include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\HP\STM32CubeIDE\workspace_1.19.0\silica\Drivers\gpio\Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\HP\STM32CubeIDE\workspace_1.19.0\silica\Drivers\uart\Inc&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.90247085" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
