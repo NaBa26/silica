@@ -7,9 +7,12 @@ void UART_Init(USART_TypeDef *pUARTx, uint32_t baudrate, uint32_t pclk){
 	pUARTx->CR1 &= ~(1 << 10);
 	pUARTx->CR2 &= ~(3 << 12);
 
-	uint32_t mantissa = pclk / (16 * baudrate);
-	uint32_t fraction = ((pclk / baudrate) - (mantissa * 16));
-	pUARTx->BRR = (mantissa << 4) | (fraction & 0xF);
+	uint32_t divisor = 16 * baudrate;
+	uint32_t mantissa = pclk / divisor;
+	uint32_t remainder = pclk % divisor;
+	uint32_t fraction = ((remainder * 16) + (divisor / 2)) / divisor;
+
+	pUARTx->BRR = (mantissa << 4) | fraction;
 
 
 	pUARTx->CR1 |= (1 << 3);
@@ -28,6 +31,10 @@ void UART_GPIO_Init(void){
 
 	GPIOA->MODER &= ~(0xF << 4);
 	GPIOA->MODER |= (0xA << 4);
+
+	GPIOA->OSPEEDR |= (0xF << 4);
+
+	GPIOA->PUPDR &= ~(0xF << 4);
 
 	GPIOA->AFR[0] &= ~(0xFF << 8);
 	GPIOA->AFR[0] |= (0x77 << 8);

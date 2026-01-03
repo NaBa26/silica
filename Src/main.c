@@ -17,6 +17,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 
 #include "gpio_driver.h"
 #include "uart_driver.h"
@@ -37,9 +38,15 @@ void blinky(void){
 }
 
 void uart_sender(void){
+	printf("Entering the function\n");
 	UART_ClockEnable(USART2);
 	UART_GPIO_Init();
-	UART_Init(USART2, 115200, 42000000);
+	UART_Init(USART2, 115200, 16000000);
+
+	printf("UART function was initialized\n");
+
+	delay(100000);
+
 
 	UART_SendString(USART2, "\r\n=== UART Test Menu ===\r\n");
 	UART_SendString(USART2, "1. Blink LED\r\n");
@@ -48,6 +55,7 @@ void uart_sender(void){
 	UART_SendString(USART2, "Select: ");
 
     while(1) {
+    	printf("Entering the embedded loop\n");
         uint8_t choice = UART_ReceiveChar(USART2);
         UART_SendChar(USART2, choice);
         UART_SendString(USART2, "\r\n");
@@ -55,6 +63,8 @@ void uart_sender(void){
         switch(choice) {
             case '1':
                 UART_SendString(USART2, "LED toggling...\r\n");
+                GPIO_ClockEnable(GPIOA);
+                GPIO_PinMode(GPIOA, 5, GPIO_MODE_OUTPUT);
                 GPIO_TogglePin(GPIOA, 5);
                 break;
             case '2':
