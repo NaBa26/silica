@@ -1,36 +1,26 @@
-# STM32CubeIDE
-.cproject
-.project
-.settings/
+# STM32CubeIDE build output
 Debug/
 Release/
+
+# Object and build artifacts
 *.o
 *.a
 *.elf
 *.hex
 *.bin
 *.map
+*.out
+*.d
 
-# IDE
+# IDE (optional external IDEs)
 .vscode/
 .idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
 *~
-.DS_Store
+.settings/
 
-# Build
-build/
-dist/
-*.out
-
-# Dependencies
-*.d
-
-# OS
-Thumbs.db
-
-# Extra files
-.cproject
-.project
-silica.launch 
