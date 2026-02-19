@@ -1,75 +1,88 @@
 #include "gpio_driver.h"
 
-void GPIO_PinMode(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t mode){
-    if(pin > 15 || mode > 3) {
-        return;
-    }
+/* ================= Clock Enable ================= */
 
-    uint8_t bit_pos = pin * 2;
-    pGPIOx->MODER &= ~(0x3 << bit_pos);
-    pGPIOx->MODER |= (mode << bit_pos);
+void GPIO_ClockEnable(GPIO_TypeDef *pGPIOx)
+{
+    if      (pGPIOx == GPIOA) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+    else if (pGPIOx == GPIOB) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+    else if (pGPIOx == GPIOC) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+    else if (pGPIOx == GPIOD) RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+    else if (pGPIOx == GPIOE) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
 }
 
-void GPIO_ClockEnable(GPIO_TypeDef *pGPIOx){
-	if(pGPIOx == GPIOA){
-		RCC->AHB1ENR |= (0x1 << 0);
-	}
+/* ================= Configuration ================= */
 
-	else if(pGPIOx == GPIOB){
-		RCC->AHB1ENR |= (0x1 << 1);
-	}
+void GPIO_SetMode(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t mode)
+{
+    if (pin > 15U || mode > GPIO_MODE_ANALOG) return;
 
-	else if(pGPIOx == GPIOC){
-		RCC->AHB1ENR |= (0x1 << 2);
-	}
-
-	else if(pGPIOx == GPIOD){
-		RCC->AHB1ENR |= (0x1 << 3);
-	}
-
-	else if(pGPIOx == GPIOE){
-		RCC->AHB1ENR |= (0x1 << 4);
-	}
-
-	else{
-		return;
-	}
+    uint32_t pos = pin * 2U;
+    pGPIOx->MODER &= ~(0x3U << pos);
+    pGPIOx->MODER |=  ((uint32_t)mode << pos);
 }
 
-void GPIO_WritePin(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t value){
-	if(pin > 15) {
-	        return;
-	}
+void GPIO_SetOutputType(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t type)
+{
+    if (pin > 15U || type > GPIO_OTYPE_OD) return;
 
-	if(value > 1){
-			return;
-	}
-
-	uint8_t set_pos = pin;
-	uint8_t reset_pos = (set_pos) + 0x10;
-
-	if(value == 1){
-		pGPIOx->BSRR = (0x1 << set_pos);
-	}
-	else{
-		pGPIOx->BSRR = (0x1 << reset_pos);
-	}
+    pGPIOx->OTYPER &= ~(1U << pin);
+    pGPIOx->OTYPER |=  ((uint32_t)type << pin);
 }
 
-uint8_t GPIO_ReadPin(GPIO_TypeDef *pGPIOx, uint8_t pin){
-	if(pin > 15) {
-		return 0xFF;
-	}
+void GPIO_SetSpeed(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t speed)
+{
+    if (pin > 15U || speed > GPIO_SPEED_HIGH) return;
 
-	uint8_t bit_pos = pin;
-
-	return ((pGPIOx->IDR & (0x1 << bit_pos)) >> bit_pos);
+    uint32_t pos = pin * 2U;
+    pGPIOx->OSPEEDR &= ~(0x3U << pos);
+    pGPIOx->OSPEEDR |=  ((uint32_t)speed << pos);
 }
 
-void GPIO_TogglePin(GPIO_TypeDef *pGPIOx, uint8_t pin){
-    if(pin > 15) {
-        return;
-    }
+void GPIO_SetPull(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t pull)
+{
+    if (pin > 15U || pull > GPIO_PULL_DOWN) return;
 
-    pGPIOx->ODR ^= (1 << pin);
+    uint32_t pos = pin * 2U;
+    pGPIOx->PUPDR &= ~(0x3U << pos);
+    pGPIOx->PUPDR |=  ((uint32_t)pull << pos);
+}
+
+void GPIO_SetAlternateFunction(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t af)
+{
+    if (pin > 15U || af > 15U) return;
+
+    uint32_t index = pin / 8U;
+    uint32_t pos   = (pin % 8U) * 4U;
+
+    pGPIOx->AFR[index] &= ~(0xFU << pos);
+    pGPIOx->AFR[index] |=  ((uint32_t)af << pos);
+}
+
+/* ================= IO Operations ================= */
+
+void GPIO_WritePin(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t state)
+{
+    if (pin > 15U) return;
+
+    if (state == GPIO_PIN_SET)
+        pGPIOx->BSRR = (1U << pin);
+    else
+        pGPIOx->BSRR = (1U << (pin + 16U));
+}
+
+uint8_t GPIO_ReadPin(GPIO_TypeDef *pGPIOx, uint8_t pin)
+{
+    if (pin > 15U) return 0U;
+    return (uint8_t)((pGPIOx->IDR >> pin) & 0x1U);
+}
+
+void GPIO_TogglePin(GPIO_TypeDef *pGPIOx, uint8_t pin)
+{
+    if (pin > 15U) return;
+
+    if ((pGPIOx->ODR >> pin) & 0x1U)
+        pGPIOx->BSRR = (1U << (pin + 16U));
+    else
+        pGPIOx->BSRR = (1U << pin);
 }

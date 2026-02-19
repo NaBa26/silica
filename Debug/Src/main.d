@@ -1,19 +1,21 @@
 Src/main.o: ../Src/main.c \
- C:/Users/HP/STM32CubeIDE/workspace_1.19.0/silica/Drivers/gpio/Inc/gpio_driver.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xe.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/core_cm4.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_version.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_compiler.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_gcc.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/mpu_armv7.h \
- C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
- C:/Users/HP/STM32CubeIDE/workspace_1.19.0/silica/Drivers/uart/Inc/uart_driver.h
-C:/Users/HP/STM32CubeIDE/workspace_1.19.0/silica/Drivers/gpio/Inc/gpio_driver.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xe.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/core_cm4.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_version.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_compiler.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/cmsis_gcc.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include/mpu_armv7.h:
-C:/Users/HP/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h:
-C:/Users/HP/STM32CubeIDE/workspace_1.19.0/silica/Drivers/uart/Inc/uart_driver.h:
+ /home/nb/Projects/silica/CMSIS/Inc/stm32f401xe.h \
+ /home/nb/Projects/silica/CMSIS/Inc/core_cm4.h \
+ /home/nb/Projects/silica/CMSIS/Inc/cmsis_version.h \
+ /home/nb/Projects/silica/CMSIS/Inc/cmsis_compiler.h \
+ /home/nb/Projects/silica/CMSIS/Inc/cmsis_gcc.h \
+ /home/nb/Projects/silica/CMSIS/Inc/mpu_armv7.h \
+ /home/nb/Projects/silica/CMSIS/Inc/system_stm32f4xx.h \
+ /home/nb/Projects/silica/Drivers/gpio/Inc/gpio_driver.h \
+ /home/nb/Projects/silica/Drivers/uart/Inc/uart_driver.h \
+ /home/nb/Projects/silica/Drivers/i2c/Inc/i2c_driver.h
+/home/nb/Projects/silica/CMSIS/Inc/stm32f401xe.h:
+/home/nb/Projects/silica/CMSIS/Inc/core_cm4.h:
+/home/nb/Projects/silica/CMSIS/Inc/cmsis_version.h:
+/home/nb/Projects/silica/CMSIS/Inc/cmsis_compiler.h:
+/home/nb/Projects/silica/CMSIS/Inc/cmsis_gcc.h:
+/home/nb/Projects/silica/CMSIS/Inc/mpu_armv7.h:
+/home/nb/Projects/silica/CMSIS/Inc/system_stm32f4xx.h:
+/home/nb/Projects/silica/Drivers/gpio/Inc/gpio_driver.h:
+/home/nb/Projects/silica/Drivers/uart/Inc/uart_driver.h:
+/home/nb/Projects/silica/Drivers/i2c/Inc/i2c_driver.h:

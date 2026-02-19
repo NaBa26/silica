@@ -1,4 +1,6 @@
+"./CMSIS/Src/system_stm32f4xx.o"
 "./Drivers/gpio/Src/gpio_driver.o"
+"./Drivers/i2c/Src/i2c_driver.o"
 "./Drivers/uart/Src/uart_driver.o"
 "./Src/main.o"
 "./Src/syscalls.o"

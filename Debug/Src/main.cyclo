@@ -1,4 +1,8 @@
-../Src/main.c:26:6:delay	2
-../Src/main.c:30:6:blinky	1
-../Src/main.c:40:6:uart_sender	6
-../Src/main.c:86:5:main	1
+/home/nb/Projects/silica/CMSIS/Inc/core_cm4.h:1814:22:__NVIC_SetPriority	2
+/home/nb/Projects/silica/CMSIS/Inc/core_cm4.h:2022:26:SysTick_Config	2
+../Src/main.c:9:6:SysTick_Handler	1
+../Src/main.c:14:6:delay_ms	2
+../Src/main.c:21:6:blinky	1
+../Src/main.c:38:6:uart_sender	8
+../Src/main.c:106:6:i2c_no_slave_test	3
+../Src/main.c:129:5:main	1

@@ -22,7 +22,9 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+CMSIS/Src \
 Drivers/gpio/Src \
+Drivers/i2c/Src \
 Drivers/uart/Src \
 Src \
 Startup \
