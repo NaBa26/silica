@@ -55,23 +55,6 @@ Design principles:
 - Digital read via IDR  
 - Pin toggle utility  
 
-### Registers Used
-
-- MODER  
-- OTYPER  
-- OSPEEDR  
-- PUPDR  
-- IDR  
-- ODR  
-- BSRR  
-- AFRL / AFRH  
-
-### Key Implementation Points
-
-- Mode configuration uses bit masking instead of magic numbers  
-- BSRR used for atomic set/reset operations  
-- Alternate function mapping handled through AFR registers  
-
 ---
 
 ## UART Driver (USART2)
@@ -83,32 +66,6 @@ Configured for communication via ST-Link Virtual COM Port:
 
 ### Features
 
-- Configurable baud rate (integer arithmetic, no FPU usage)  
-- Character transmission  
-- String transmission  
-- Blocking character reception  
-- Polling-based flag handling (TXE, RXNE)
-
-### Registers Used
-
-- CR1  
-- CR2  
-- BRR  
-- SR  
-- DR  
-
-### Configuration
-
-- Baud Rate: 115200  
-- Data Bits: 8  
-- Parity: None  
-- Stop Bits: 1  
-- Flow Control: None  
-
-Terminal tested using PuTTY.
-
----
-
 ## Technical Focus Areas
 
 - Manual baud rate calculation  
@@ -119,23 +76,20 @@ Terminal tested using PuTTY.
 
 ---
 
-## Limitations
+## I2C Driver (I2C1)
 
-- Polling-only implementation (no interrupt support yet)  
-- No error handling for framing, overrun, or noise errors  
-- No power management integration  
-- No DMA support  
+
+### Features
+
+## Technical Focus Areas
 
 ---
 
 ## Planned Extensions
-
-- Interrupt-driven UART  
-- I2C driver (interrupt-based state machine)  
+- Improving further complexity for I2C test code with slaves involved
 - SPI master driver  
 - Timer/PWM driver  
-- DMA-based UART transmission  
-- Basic ring buffer implementation  
+- CAN implementation  
 
 ---
 
@@ -147,7 +101,5 @@ Terminal tested using PuTTY.
 - Developing deterministic drivers without middleware  
 
 ---
-
-Silica is intended as a foundation for building a fully interrupt-driven, modular embedded driver stack from first principles.
 
 
