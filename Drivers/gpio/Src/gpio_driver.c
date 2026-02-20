@@ -1,7 +1,5 @@
 #include "gpio_driver.h"
 
-/* ================= Clock Enable ================= */
-
 void GPIO_ClockEnable(GPIO_TypeDef *pGPIOx)
 {
     if      (pGPIOx == GPIOA) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -11,7 +9,6 @@ void GPIO_ClockEnable(GPIO_TypeDef *pGPIOx)
     else if (pGPIOx == GPIOE) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
 }
 
-/* ================= Configuration ================= */
 
 void GPIO_SetMode(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t mode)
 {
@@ -59,7 +56,6 @@ void GPIO_SetAlternateFunction(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t af)
     pGPIOx->AFR[index] |=  ((uint32_t)af << pos);
 }
 
-/* ================= IO Operations ================= */
 
 void GPIO_WritePin(GPIO_TypeDef *pGPIOx, uint8_t pin, uint8_t state)
 {
