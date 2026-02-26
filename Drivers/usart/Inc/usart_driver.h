@@ -12,5 +12,6 @@ void USART_Init(uint32_t baudrate, uint32_t pclk);
 void USART_SendChar(uint8_t data);
 void USART_SendString(const char *str);
 uint8_t USART_ReadChar(uint8_t *data);
+void USART_IRQHandler(void);
 
 #endif
