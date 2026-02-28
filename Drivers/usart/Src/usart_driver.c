@@ -17,7 +17,7 @@ void USART_ClockEnable(USART_TypeDef *USARTx)
 	else if (USARTx == USART6) RCC->APB2ENR |= RCC_APB2ENR_USART6EN;
 }
 
-void USART_Init(uint32_t baudrate, uint32_t pclk){
+void USART2_Init(uint32_t baudrate, uint32_t pclk){
 	USART_ClockEnable(USART2);
 
 	GPIO_ClockEnable(GPIOA);
@@ -26,8 +26,8 @@ void USART_Init(uint32_t baudrate, uint32_t pclk){
 	GPIO_SetSpeed(GPIOA, 2, GPIO_SPEED_HIGH);
 	GPIO_SetSpeed(GPIOA, 3, GPIO_SPEED_HIGH);
 	GPIO_SetPull(GPIOA, 3, GPIO_PULL_UP);
-	GPIO_SetAlternateFunction(GPIOA, 2, USART2_AF);
-	GPIO_SetAlternateFunction(GPIOA, 3, USART2_AF);
+	GPIO_SetAlternateFunction(GPIOA, 2, USART2_GPIO_AF);
+	GPIO_SetAlternateFunction(GPIOA, 3, USART2_GPIO_AF);
 
 	USART2->CR1 &= ~(USART_CR1_M | USART_CR1_PCE | USART_CR1_OVER8); //no parity control, over 16 sampling and 8 bits data
 	USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE | USART_CR1_UE;
@@ -49,7 +49,14 @@ void USART_Init(uint32_t baudrate, uint32_t pclk){
 }
 
 void USART_SendChar(uint8_t data){
+	uint8_t next = (tx_head + 1)%USART_TX_BUF_SIZE;
 
+	while(next == tx_tail);
+
+	tx_buf[tx_head] = data;
+	tx_head = next;
+
+	USART2->CR2 |= USART_CR1_TXEIE;
 }
 
 void USART_SendString(const char *str)
@@ -61,7 +68,12 @@ void USART_SendString(const char *str)
 }
 
 uint8_t USART_ReadChar(uint8_t *data){
+	if (rx_head == rx_tail) return 0;
 
+	*data = rx_buf[rx_tail];
+	rx_tail = (rx_tail + 1) % UART2_RX_BUF_SIZE;
+
+	return 1;
 }
 
 void USART_IRQHandler(void){
