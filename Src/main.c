@@ -1,8 +1,7 @@
 #include "stm32f401xe.h"
 #include "gpio_driver.h"
 #include "i2c_driver.h"
-
-#include "../Drivers/usart/Inc/usart_driver.h"
+#include "usart_driver.h"
 
 volatile uint32_t uwTick = 0;
 

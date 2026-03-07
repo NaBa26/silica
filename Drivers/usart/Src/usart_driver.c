@@ -44,11 +44,11 @@ void USART2_Init(uint32_t baudrate, uint32_t pclk){
 
 	USART2->BRR = (mantissa << 4) | (fraction & 0xFU);
 
-	NVIC_SetPriority(USART2_IRQn, 1);
-	NVIC_EnableIRQ(USART2_IRQn);
+	NVIC_SetPriority(USART2_IRQHandler, 1);
+	NVIC_EnableIRQ(USART2_IRQHandler);
 }
 
-void USART_SendChar(uint8_t data){
+void USART_SendChar(USART_TypeDef *USARTx, uint8_t data){
 	uint8_t next = (tx_head + 1)%USART_TX_BUF_SIZE;
 
 	while(next == tx_tail);
@@ -56,14 +56,14 @@ void USART_SendChar(uint8_t data){
 	tx_buf[tx_head] = data;
 	tx_head = next;
 
-	USART2->CR2 |= USART_CR1_TXEIE;
+	USARTx->CR1 |= USART_CR1_TXEIE;
 }
 
-void USART_SendString(const char *str)
+void USART_SendString(USART_TypeDef *USARTx, const char *str)
 {
     while (*str)
     {
-        UART2_SendChar((uint8_t)*str++);
+        USART_SendChar(USART_TypeDef *USARTx, (uint8_t)*str++);
     }
 }
 
@@ -71,18 +71,18 @@ uint8_t USART_ReadChar(uint8_t *data){
 	if (rx_head == rx_tail) return 0;
 
 	*data = rx_buf[rx_tail];
-	rx_tail = (rx_tail + 1) % UART2_RX_BUF_SIZE;
+	rx_tail = (rx_tail + 1) % USART_RX_BUF_SIZE;
 
 	return 1;
 }
 
-void USART_IRQHandler(void){
+void USART2_IRQHandler(void){
 	uint32_t sr = USART2->SR;
 
-	while(sr & USART_SR_RXNE){
-		uint8_t data = (uint8_t)USART2->DR;
+	if(sr & USART_SR_RXNE){
+		uint8_t data = (uint8_t)USARTx->DR;
 
-		        uint16_t next = (rx_head + 1) % UART2_RX_BUF_SIZE;
+		        uint16_t next = (rx_head + 1) % USART_RX_BUF_SIZE;
 
 		        if (next != rx_tail)
 		        {
@@ -92,13 +92,13 @@ void USART_IRQHandler(void){
 	}
 
 	//even if I haven't enabled the transmitter interrupt, I still would add it here as it's important for this condition
-	if((sr & USART_SR_RXNE) & (USART2->CR1 & USART_CR1_TXEIE)){
-		if(tx_head == tx_head){
+	if((sr & USART_SR_TXE)  & (USARTx->CR1 & USART_CR1_TXEIE)){
+		if(tx_head == tx_tail){
 			USART2->CR1 &= ~(USART_CR1_TXEIE);
 		}
 		else{
 			USART2->DR = tx_buf[tx_tail];
-			tx_tail = (tx_tail+1) & UART2_TX_BUF_SIZE;
+			tx_tail = (tx_tail+1) % USART_TX_BUF_SIZE;
 		}
 	}
 
