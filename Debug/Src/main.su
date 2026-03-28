@@ -4,5 +4,4 @@
 ../Src/main.c:14:6:delay_ms	24	static
 ../Src/main.c:21:6:blinky	8	static
 ../Src/main.c:38:6:uart_sender	16	static
-../Src/main.c:106:6:i2c_no_slave_test	8	static
-../Src/main.c:129:5:main	8	static
+../Src/main.c:107:5:main	8	static

@@ -25,7 +25,8 @@ SUBDIRS := \
 CMSIS/Src \
 Drivers/gpio/Src \
 Drivers/i2c/Src \
-Drivers/uart/Src \
+Drivers/timers/Src \
+Drivers/usart/Src \
 Src \
 Startup \
 

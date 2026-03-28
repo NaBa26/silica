@@ -44,86 +44,70 @@ void uart_sender(void)
     GPIO_SetSpeed(GPIOA, 5, GPIO_SPEED_LOW);
     GPIO_SetPull(GPIOA, 5, GPIO_NO_PULL);
 
-    UART2_Init(115200U, 16000000U);
+    USART2_Init(115200U, 16000000U);
 
     delay_ms(100);
 
-    UART2_SendString("\r\n=== UART Test Menu ===\r\n");
-    UART2_SendString("1. Toggle LED\r\n");
-    UART2_SendString("2. Send message\r\n");
-    UART2_SendString("3. Echo mode\r\n");
-    UART2_SendString("Select: ");
+    USART_SendString(USART2, "\r\n=== UART Test Menu ===\r\n");
+    USART_SendString(USART2, "1. Toggle LED\r\n");
+    USART_SendString(USART2, "2. Send message\r\n");
+    USART_SendString(USART2, "3. Echo mode\r\n");
+    USART_SendString(USART2, "Select: ");
 
     while (1)
     {
         uint8_t choice;
 
-        if (UART2_ReadChar(&choice))
+        if (USART_ReadChar(&choice))
         {
-            UART2_SendChar(choice);
-            UART2_SendString("\r\n");
+        	USART_SendChar(USART2, choice);
+            USART_SendString(USART2, "\r\n");
 
             switch (choice)
             {
                 case '1':
                     GPIO_TogglePin(GPIOA, 5);
-                    UART2_SendString("LED toggled\r\n");
+                    USART_SendString(USART2, "LED toggled\r\n");
                     break;
 
                 case '2':
-                    UART2_SendString("Hello from STM32!\r\n");
+                	USART_SendString(USART2, "Hello from STM32!\r\n");
                     break;
 
                 case '3':
-                    UART2_SendString("Echo mode - press ESC to exit\r\n");
+                	USART_SendString(USART2, "Echo mode - press ESC to exit\r\n");
 
                     while (1)
                     {
                         uint8_t c;
-                        if (UART2_ReadChar(&c))
+                        if (USART_ReadChar(&c))
                         {
                             if (c == 0x1B)  // ESC
                                 break;
 
-                            UART2_SendChar(c);
+                            USART_SendChar(USART2, c);
                         }
                     }
 
-                    UART2_SendString("\r\nExited echo mode\r\n");
+                    USART_SendString(USART2, "\r\nExited echo mode\r\n");
                     break;
 
                 default:
-                    UART2_SendString("Invalid option\r\n");
+                	USART_SendString(USART2, "Invalid option\r\n");
                     break;
             }
 
-            UART2_SendString("\r\nSelect: ");
+            USART_SendString(USART2, "\r\nSelect: ");
         }
     }
 }
 
+void pressure_sensor(void){
+	I2C1_Init(pclk);
+	I2C_write(I2Cx, BMP280_ADDR, data, 1);
+	I2C_read(I2Cx, BMP280_ADDR, buf, 3);
 
-void i2c_no_slave_test(void)
-{
-    I2C1_Init();
-
-    static uint8_t dummy[1] = {0xAA};
-
-    while (1)
-    {
-        if (I2C1_GetState() == I2C_READY)
-        {
-            I2C1_Master_Transmit_IT(0x50, dummy, 1);
-        }
-
-        if (I2C1->SR1 & I2C_SR1_AF)
-        {
-            I2C1->SR1 &= ~I2C_SR1_AF;
-            I2C1->CR1 |= I2C_CR1_STOP;
-        }
-    }
 }
-
 
 
 int main(void)
@@ -132,5 +116,4 @@ int main(void)
 
     uart_sender();
 //    blinky();
-//    i2c_no_slave_test();
 }

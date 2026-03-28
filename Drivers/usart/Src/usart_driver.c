@@ -44,8 +44,9 @@ void USART2_Init(uint32_t baudrate, uint32_t pclk){
 
 	USART2->BRR = (mantissa << 4) | (fraction & 0xFU);
 
-	NVIC_SetPriority(USART2_IRQHandler, 1);
-	NVIC_EnableIRQ(USART2_IRQHandler);
+	NVIC_EnableIRQ(USART2_IRQn);
+	NVIC_SetPriority(USART2_IRQn, 1);
+
 }
 
 void USART_SendChar(USART_TypeDef *USARTx, uint8_t data){
@@ -63,7 +64,7 @@ void USART_SendString(USART_TypeDef *USARTx, const char *str)
 {
     while (*str)
     {
-        USART_SendChar(USART_TypeDef *USARTx, (uint8_t)*str++);
+        USART_SendChar(USART2, (uint8_t)*str++);
     }
 }
 
@@ -80,7 +81,7 @@ void USART2_IRQHandler(void){
 	uint32_t sr = USART2->SR;
 
 	if(sr & USART_SR_RXNE){
-		uint8_t data = (uint8_t)USARTx->DR;
+		uint8_t data = (uint8_t)USART2->DR;
 
 		        uint16_t next = (rx_head + 1) % USART_RX_BUF_SIZE;
 
@@ -92,7 +93,7 @@ void USART2_IRQHandler(void){
 	}
 
 	//even if I haven't enabled the transmitter interrupt, I still would add it here as it's important for this condition
-	if((sr & USART_SR_TXE)  & (USARTx->CR1 & USART_CR1_TXEIE)){
+	if((sr & USART_SR_TXE)  & (USART2->CR1 & USART_CR1_TXEIE)){
 		if(tx_head == tx_tail){
 			USART2->CR1 &= ~(USART_CR1_TXEIE);
 		}
