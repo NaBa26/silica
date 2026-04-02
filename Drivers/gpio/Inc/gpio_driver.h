@@ -1,28 +1,29 @@
 #ifndef GPIO_DRIVER_H
 #define GPIO_DRIVER_H
 
-#include "stm32f401xe.h"
 #include <stdint.h>
 
-#define GPIO_MODE_INPUT     0x0U
-#define GPIO_MODE_OUTPUT    0x1U
-#define GPIO_MODE_AF        0x2U
-#define GPIO_MODE_ANALOG    0x3U
+#include "stm32f401xe.h"
 
-#define GPIO_OTYPE_PP       0x0U
-#define GPIO_OTYPE_OD       0x1U
+#define GPIO_MODE_INPUT 0x0U
+#define GPIO_MODE_OUTPUT 0x1U
+#define GPIO_MODE_AF 0x2U
+#define GPIO_MODE_ANALOG 0x3U
 
-#define GPIO_SPEED_LOW      0x0U
-#define GPIO_SPEED_MEDIUM   0x1U
-#define GPIO_SPEED_FAST     0x2U
-#define GPIO_SPEED_HIGH     0x3U
+#define GPIO_OTYPE_PP 0x0U
+#define GPIO_OTYPE_OD 0x1U
 
-#define GPIO_NO_PULL        0x0U
-#define GPIO_PULL_UP        0x1U
-#define GPIO_PULL_DOWN      0x2U
+#define GPIO_SPEED_LOW 0x0U
+#define GPIO_SPEED_MEDIUM 0x1U
+#define GPIO_SPEED_FAST 0x2U
+#define GPIO_SPEED_HIGH 0x3U
 
-#define GPIO_PIN_RESET      0x0U
-#define GPIO_PIN_SET        0x1U
+#define GPIO_NO_PULL 0x0U
+#define GPIO_PULL_UP 0x1U
+#define GPIO_PULL_DOWN 0x2U
+
+#define GPIO_PIN_RESET 0x0U
+#define GPIO_PIN_SET 0x1U
 
 void GPIO_ClockEnable(GPIO_TypeDef *pGPIOx);
 
