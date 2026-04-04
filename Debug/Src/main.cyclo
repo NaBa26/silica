@@ -1,7 +1,11 @@
 /home/nb/Projects/silica/CMSIS/Inc/core_cm4.h:1814:22:__NVIC_SetPriority	2
 /home/nb/Projects/silica/CMSIS/Inc/core_cm4.h:2022:26:SysTick_Config	2
-../Src/main.c:9:6:SysTick_Handler	1
-../Src/main.c:14:6:delay_ms	2
-../Src/main.c:21:6:blinky	1
-../Src/main.c:38:6:uart_sender	8
-../Src/main.c:107:5:main	1
+../Src/main.c:22:6:SysTick_Handler	1
+../Src/main.c:24:6:delay_ms	2
+../Src/main.c:29:6:send_int	5
+../Src/main.c:38:6:blinky	1
+../Src/main.c:52:6:uart_sender	8
+../Src/main.c:115:9:bmp280_compensate_T_int32	1
+../Src/main.c:128:10:bmp280_compensate_P_int32	3
+../Src/main.c:154:6:sensor	1
+../Src/main.c:203:5:main	1

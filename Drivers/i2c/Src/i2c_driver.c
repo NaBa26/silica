@@ -33,9 +33,9 @@ void I2C1_Init(uint32_t pclk) {
   I2C1->CR1 |= I2C_CR1_SWRST;
   I2C1->CR1 &= ~I2C_CR1_SWRST;
 
-  I2C1->CR2 = I2C1_APB1_FREQ_MHZ;
-  I2C1->CCR = I2C1_CCR_VALUE;
-  I2C1->TRISE = I2C1_TRISE_VALUE;
+  I2C1->CR2 = pclk;
+  I2C1->CCR = I2C_CCR_VALUE;
+  I2C1->TRISE = I2C_TRISE_VALUE;
 
   I2C1->CR1 |= I2C_CR1_ACK;
 
@@ -86,6 +86,16 @@ uint8_t I2C_read(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *buf,
   return 1U;
 }
 
+uint8_t I2C_write_then_read(I2C_TypeDef *I2Cx, uint8_t slave_addr,
+                            uint8_t *data, uint16_t write_len, uint8_t *buf,
+                            uint16_t read_len) {
+  I2C_write(I2Cx, slave_addr, data, write_len);
+  while (I2C1_GetState() != I2C_READY);
+  I2C_read(I2Cx, slave_addr, buf, read_len);
+  while (I2C1_GetState() != I2C_READY);
+  return 1U;
+}
+
 void I2C1_EV_IRQHandler(void) {
   uint32_t sr1 = I2C1->SR1;
   // ISR would fire once the start bit is set
@@ -123,12 +133,15 @@ void I2C1_EV_IRQHandler(void) {
         I2C1->CR1 &= ~I2C_CR1_ACK;  // prepare NACK for last byte
         I2C1->CR1 |= I2C_CR1_STOP;
       } else if (i2c_index >= i2c_len) {
-        // just read last byte
         i2c_state = I2C_READY;
-        I2C1->CR1 |= I2C_CR1_ACK;  // re-enable ACK for next transaction
+        I2C1->CR1 |= I2C_CR1_ACK;
       }
     }
   }
 }
 
-void I2C1_ER_IRQHandler(void) { I2C1->SR1 |= I2C_SR1_BTF; }
+void I2C1_ER_IRQHandler(void) {
+  I2C1->SR1 = 0U;  // clear all error flags
+  I2C1->CR1 |= I2C_CR1_STOP;
+  i2c_state = I2C_READY;
+}
