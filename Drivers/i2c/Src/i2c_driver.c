@@ -34,8 +34,8 @@ void I2C1_Init(uint32_t pclk) {
   I2C1->CR1 &= ~I2C_CR1_SWRST;
 
   I2C1->CR2 = pclk;
-  I2C1->CCR = I2C_CCR_VALUE;
-  I2C1->TRISE = I2C_TRISE_VALUE;
+  I2C1->CCR = I2C1_CCR_VALUE;
+  I2C1->TRISE = I2C1_TRISE_VALUE;
 
   I2C1->CR1 |= I2C_CR1_ACK;
 
@@ -44,8 +44,6 @@ void I2C1_Init(uint32_t pclk) {
   NVIC_SetPriority(I2C1_ER_IRQn, 1);
   NVIC_SetPriority(I2C1_EV_IRQn, 2);
 
-  I2C1->CR2 |= I2C_CR2_ITEVTEN;
-  I2C1->CR2 |= I2C_CR2_ITBUFEN;
   I2C1->CR2 |= I2C_CR2_ITERREN;
 
   // enable this at the end of init
@@ -65,6 +63,9 @@ uint8_t I2C_write(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *data,
   i2c_index = 0U;
   i2c_addr = (slave_addr << 1U);
 
+  I2C1->CR2 |= I2C_CR2_ITEVTEN;
+  I2C1->CR2 |= I2C_CR2_ITBUFEN;
+
   I2C1->CR1 |= I2C_CR1_START;
 
   return 1U;
@@ -80,6 +81,9 @@ uint8_t I2C_read(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *buf,
   i2c_len = len;
   i2c_index = 0U;
   i2c_addr = (slave_addr << 1U) | 1U;
+
+  I2C1->CR2 |= I2C_CR2_ITEVTEN;
+  I2C1->CR2 |= I2C_CR2_ITBUFEN;
 
   I2C1->CR1 |= I2C_CR1_START;
 

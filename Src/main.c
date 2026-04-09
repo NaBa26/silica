@@ -193,7 +193,7 @@ void sensor(void) {
     USART_SendChar(USART2, '.');
     send_int(USART2, temp%100);
     USART_SendString(USART2, " C\r\n");
-
+    USART_SendString(USART2, "----------------------------------------------\n");
     USART_SendString(USART2, "Pressure: \t");
     send_int(USART2, pr/100);
     USART_SendString(USART2, " Pa\r\n");
