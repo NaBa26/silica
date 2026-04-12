@@ -19,7 +19,9 @@ static int16_t dig_P8;
 static int16_t dig_P9;
 
 
-void SysTick_Handler(void) { uwTick++; }
+void SysTick_Handler(void)
+{ 	uwTick++;
+}
 
 void delay_ms(uint32_t ms) {
   uint32_t start = uwTick;
@@ -186,7 +188,6 @@ void sensor(void) {
     int32_t temp = bmp280_compensate_T_int32(adc_T);
     uint32_t pr = bmp280_compensate_P_int32(adc_P);
 
-    delay_ms(100);
 
     USART_SendString(USART2, "Temperature: \t");
     send_int(USART2, temp/100);

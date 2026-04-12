@@ -1,6 +1,7 @@
 #include "gpio_driver.h"
 #include "i2c_driver.h"
 
+
 static volatile I2C_State_t i2c_state = I2C_READY;
 
 static volatile uint8_t *i2c_buf;
@@ -23,8 +24,10 @@ void I2C1_Init(uint32_t pclk) {
   GPIO_ClockEnable(GPIOB);
   GPIO_SetMode(GPIOB, 6, GPIO_MODE_AF);
   GPIO_SetMode(GPIOB, 7, GPIO_MODE_AF);
-  GPIO_SetSpeed(GPIOB, 6, GPIO_SPEED_HIGH);
-  GPIO_SetSpeed(GPIOB, 7, GPIO_SPEED_HIGH);
+  GPIO_SetPull(GPIOB, 6, GPIO_PULL_UP);
+  GPIO_SetPull(GPIOB, 7, GPIO_PULL_UP);
+  GPIO_SetSpeed(GPIOB, 6, GPIO_SPEED_LOW);
+  GPIO_SetSpeed(GPIOB, 7, GPIO_SPEED_LOW);
   GPIO_SetOutputType(GPIOB, 6, GPIO_OTYPE_OD);
   GPIO_SetOutputType(GPIOB, 7, GPIO_OTYPE_OD);
   GPIO_SetAlternateFunction(GPIOB, 6, I2C1_GPIO_AF);
@@ -40,9 +43,12 @@ void I2C1_Init(uint32_t pclk) {
   I2C1->CR1 |= I2C_CR1_ACK;
 
   NVIC_EnableIRQ(I2C1_EV_IRQn);
+  __NVIC_SetPendingIRQ(I2C1_EV_IRQn);
   NVIC_EnableIRQ(I2C1_ER_IRQn);
   NVIC_SetPriority(I2C1_ER_IRQn, 1);
-  NVIC_SetPriority(I2C1_EV_IRQn, 2);
+  NVIC_SetPriority(I2C1_EV_IRQn, 1);
+
+
 
   I2C1->CR2 |= I2C_CR2_ITERREN;
 
@@ -50,7 +56,7 @@ void I2C1_Init(uint32_t pclk) {
   I2C1->CR1 |= I2C_CR1_PE;
 }
 
-I2C_State_t I2C1_GetState(void) { return i2c_state; }
+I2C_State_t I2C_GetState(void) { return i2c_state; }
 
 uint8_t I2C_write(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *data,
                   uint16_t len) {
@@ -63,11 +69,10 @@ uint8_t I2C_write(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *data,
   i2c_index = 0U;
   i2c_addr = (slave_addr << 1U);
 
-  I2C1->CR2 |= I2C_CR2_ITEVTEN;
-  I2C1->CR2 |= I2C_CR2_ITBUFEN;
+  I2Cx->CR2 |= I2C_CR2_ITEVTEN;
+  I2Cx->CR2 |= I2C_CR2_ITBUFEN;
 
-  I2C1->CR1 |= I2C_CR1_START;
-
+  I2Cx->CR1 |= I2C_CR1_START;
   return 1U;
 }
 
@@ -82,10 +87,10 @@ uint8_t I2C_read(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *buf,
   i2c_index = 0U;
   i2c_addr = (slave_addr << 1U) | 1U;
 
-  I2C1->CR2 |= I2C_CR2_ITEVTEN;
-  I2C1->CR2 |= I2C_CR2_ITBUFEN;
+  I2Cx->CR2 |= I2C_CR2_ITEVTEN;
+  I2Cx->CR2 |= I2C_CR2_ITBUFEN;
 
-  I2C1->CR1 |= I2C_CR1_START;
+  I2Cx->CR1 |= I2C_CR1_START;
 
   return 1U;
 }
@@ -94,15 +99,14 @@ uint8_t I2C_write_then_read(I2C_TypeDef *I2Cx, uint8_t slave_addr,
                             uint8_t *data, uint16_t write_len, uint8_t *buf,
                             uint16_t read_len) {
   I2C_write(I2Cx, slave_addr, data, write_len);
-  while (I2C1_GetState() != I2C_READY);
+  while (I2C_GetState() != I2C_READY);
   I2C_read(I2Cx, slave_addr, buf, read_len);
-  while (I2C1_GetState() != I2C_READY);
+  while (I2C_GetState() != I2C_READY);
   return 1U;
 }
 
 void I2C1_EV_IRQHandler(void) {
   uint32_t sr1 = I2C1->SR1;
-  // ISR would fire once the start bit is set
   if (sr1 & I2C_SR1_SB) {
     I2C1->DR = i2c_addr;
   }

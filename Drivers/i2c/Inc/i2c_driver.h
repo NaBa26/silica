@@ -7,13 +7,13 @@
 
 #define BMP280_ADDR		0x76  // SDO is connected to the ground for my configuration
 #define I2C1_GPIO_AF		4U
-#define I2C1_APB1_FREQ_MHZ		42U
-#define I2C1_CCR_VALUE        210U
-#define I2C1_TRISE_VALUE      43U
+#define I2C1_APB1_FREQ_MHZ		16U
+#define I2C1_CCR_VALUE        80U
+#define I2C1_TRISE_VALUE      17U
 
 typedef enum { I2C_READY = 0, I2C_BUSY_TX, I2C_BUSY_RX } I2C_State_t;
 
-I2C_State_t I2C1_GetState(void);
+I2C_State_t I2C_GetState(void);
 void I2C_ClockEnable(I2C_TypeDef *I2Cx);
 void I2C1_Init(uint32_t pclk);
 uint8_t I2C_write(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *data,
@@ -22,7 +22,5 @@ uint8_t I2C_read(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *buf,
                  uint16_t len);
 uint8_t I2C_write_then_read(I2C_TypeDef *I2Cx, uint8_t slave_addr, uint8_t *data,
 				 uint16_t write_len, uint8_t *buf, uint16_t read_len);
-void I2C1_EV_IRQHandler(void);
-void I2C1_ER_IRQHandler(void);
 
 #endif
